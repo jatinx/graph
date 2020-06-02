@@ -22,6 +22,7 @@ template <typename T> class Graph {
   Weight weighted;
   Direction directed;
 
+  T *head = nullptr;
   std::vector<std::pair<T, int>> emptyPair;
   std::vector<std::pair<T, int>> &_find(const T &a) {
     for (auto &&i : g) {
@@ -43,11 +44,24 @@ public:
     g.reserve(sizeHint);
     emptyPair.push_back(std::make_pair(-1, -1));
   }
+  // Can be optimized
+  void setHead(T a) {
+    auto i = find(a);
+    if (i != -1)
+      head = &g[i].first;
+  }
+  T getHead() {
+    if (head)
+      return *head;
+    return -1; // Maybe have some universal value
+  }
   void insertNode(T a) {
     auto res = find(a);
     if (res == -1) {
       std::vector<std::pair<T, int>> v;
       g.push_back(std::make_pair(a, v));
+      if (head == nullptr)
+        head = &g[0].first;
     }
   }
   void insertEdge(T a, T b, int weight = 0) {
@@ -157,4 +171,24 @@ template <typename T, typename Container> bool _hasCycle(Graph<T> &g) {
 
 template <typename T> bool hasCycle(Graph<T> &g) {
   return _hasCycle<T, stack<T>>(g);
+}
+
+// Shortest Path
+template <typename T> int getDistance(Graph<T> &g, T node) {
+  T head = g.getHead();
+  std::queue<std::pair<T, std::pair<T, int>>> q; // {child, {parent, distance}};
+  std::set<T> visited;
+  q.push(std::make_pair(head, std::make_pair(head, 0)));
+  while (!q.empty()) {
+    int d_ = q.front().second.second; // distance
+    auto c_ = g.getConnected(q.front().first);
+    for (auto &i : c_) {
+      if (i == node) {
+        return d_ + 1;
+      }
+      q.push(std::make_pair(i, std::make_pair(q.front().first, d_ + 1)));
+    }
+    q.pop();
+  }
+  return -1;
 }

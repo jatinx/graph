@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-  Graph<int> g{DIRECTED};
+  Graph<int> g{UNDIRECTED};
   g.insertNode(1);
   g.insertNode(2);
   g.insertNode(3);
@@ -13,6 +13,7 @@ int main() {
   g.insertEdge(1, 2);
   g.insertEdge(3, 4);
   g.insertEdge(3, 2);
+  g.setHead(1);
   auto v = g.getNodes();
   for (auto &i : v) {
     cout << i << " - ";
@@ -47,5 +48,7 @@ int main() {
   }
   cout << endl;
   cout << "Has Cycle:: " << hasCycle(g) << endl;
-  auto pathBFS = pathUsingBFS(g, 1, 4);
+  cout << "Head:: " << g.getHead() << endl;
+  int dist = getDistance(g, 3);
+  cout << "Distance of 1 and 4 is:: " << dist << endl;
 }
