@@ -4,14 +4,15 @@
 using namespace std;
 
 int main() {
-  Graph<int> g;
+  Graph<int> g{DIRECTED};
   g.insertNode(1);
   g.insertNode(2);
   g.insertNode(3);
   g.insertNode(4);
   g.insertEdge(1, 4);
   g.insertEdge(1, 2);
-  g.insertEdge(4, 3);
+  g.insertEdge(3, 4);
+  g.insertEdge(3, 2);
   auto v = g.getNodes();
   for (auto &i : v) {
     cout << i << " - ";
@@ -45,4 +46,6 @@ int main() {
     cout << i << " - ";
   }
   cout << endl;
+  cout << "Has Cycle:: " << hasCycle(g) << endl;
+  auto pathBFS = pathUsingBFS(g, 1, 4);
 }

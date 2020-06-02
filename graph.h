@@ -133,3 +133,28 @@ template <typename T> std::vector<T> dfs(Graph<T> &g) {
   return _fs<T, stack<T>>(g);
 }
 
+// Has Cycle
+template <typename T, typename Container> bool _hasCycle(Graph<T> &g) {
+  auto nodes = g.getNodes();
+  std::set<T> visited;
+  if (!nodes.size())
+    return false;
+  Container q;
+  q.push(*nodes.begin());
+  while (!q.empty()) {
+    auto c_ = g.getConnected(q.front());
+    visited.insert(q.front());
+    q.pop();
+    for (auto &i : c_) {
+      if (visited.find(i) != visited.end()) {
+        return true;
+      }
+      q.push(i);
+    }
+  }
+  return false;
+}
+
+template <typename T> bool hasCycle(Graph<T> &g) {
+  return _hasCycle<T, stack<T>>(g);
+}
