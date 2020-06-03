@@ -154,6 +154,19 @@ template <typename T> std::vector<T> dfs(Graph<T> &g) {
 }
 
 // Has Cycle
+//
+template <typename Container, typename T>
+bool contains(const Container &c, T a) {
+  const T *end = &c.top() + 1;
+  const T *begin = end - c.size();
+  std::vector<T> v(begin, end);
+  for (auto &i : v) {
+    if (i == a)
+      return true;
+  }
+  return false;
+}
+
 template <typename T, typename Container> bool _hasCycle(Graph<T> &g) {
   auto nodes = g.getNodes();
   std::set<T> visited;
@@ -162,21 +175,22 @@ template <typename T, typename Container> bool _hasCycle(Graph<T> &g) {
   Container q;
   q.push(*nodes.begin());
   while (!q.empty()) {
-    auto c_ = g.getConnected(q.front());
-    visited.insert(q.front());
+    auto c_ = g.getConnected(q.top());
+    visited.insert(q.top());
     q.pop();
     for (auto &i : c_) {
-      if (visited.find(i) != visited.end()) {
+      q.push(i);
+      if (visited.find(i) != visited.end() && contains(q, i)) {
         return true;
       }
-      q.push(i);
     }
   }
   return false;
 }
 
+
 template <typename T> bool hasCycle(Graph<T> &g) {
-  return _hasCycle<T, stack<T>>(g);
+  return _hasCycle<T, std::stack<T, std::vector<T>>>(g);
 }
 
 // Shortest Path

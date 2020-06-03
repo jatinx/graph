@@ -15,7 +15,7 @@ int main() {
 
   g.insertEdge(1, 4);
   g.insertEdge(1, 2);
-  g.insertEdge(4, 3);
+  g.insertEdge(3, 4);
   g.insertEdge(2, 3);
 
   g.insertEdge(5, 6);
