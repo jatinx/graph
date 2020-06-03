@@ -9,10 +9,16 @@ int main() {
   g.insertNode(2);
   g.insertNode(3);
   g.insertNode(4);
+
+  g.insertNode(5);
+  g.insertNode(6);
+
   g.insertEdge(1, 4);
   g.insertEdge(1, 2);
   g.insertEdge(3, 4);
   g.insertEdge(3, 2);
+
+  g.insertEdge(5, 6);
   g.setHead(1);
   auto v = g.getNodes();
   for (auto &i : v) {
@@ -51,4 +57,6 @@ int main() {
   cout << "Head:: " << g.getHead() << endl;
   int dist = getDistance(g, 3);
   cout << "Distance of 1 and 4 is:: " << dist << endl;
+
+  cout << "Connnected Regions:: " << getConnectedRegions(g) << endl;
 }

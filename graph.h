@@ -1,4 +1,6 @@
 // Single include graph header
+// Only used for finding results to some graph problems my friends send me
+// Might not be optimized for your use case
 
 #pragma once
 
@@ -116,13 +118,17 @@ public:
 };
 template <typename T, typename Container> std::vector<T> _fs(Graph<T> &g) {
   std::vector<T> v;
-  auto nodes = g.getNodes();
-  v.reserve(nodes.size());
+  // auto nodes = g.getNodes();
+  T head = g.getHead();
+  // v.reserve(nodes.size());
   std::set<T> visited;
-  if (!nodes.size())
+  // if (!nodes.size())
+  //  return v;
+  if (!head)
     return v;
   Container q;
-  q.push(*nodes.begin());
+  // q.push(*nodes.begin()); // set the first node as head
+  q.push(head);
   while (!q.empty()) {
     v.push_back(q.front());
     auto c_ = g.getConnected(q.front());
@@ -191,4 +197,26 @@ template <typename T> int getDistance(Graph<T> &g, T node) {
     q.pop();
   }
   return -1;
+}
+
+// Connected via for loop and BFS
+template <typename T> int getConnectedRegions(Graph<T> &g) {
+  int count = 0;
+  auto allNodes = g.getNodes();
+  std::set<T> visited;
+  for (auto &node : allNodes) {
+    g.setHead(node);
+    auto bfsResult = bfs(g);
+    bool inserted = false;
+    for (auto &i : bfsResult) {
+      if (visited.find(i) == visited.end()) {
+        visited.insert(i);
+        inserted = true;
+      }
+    }
+    if (inserted) {
+      count++;
+    }
+  }
+  return count;
 }
