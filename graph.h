@@ -204,6 +204,7 @@ template <typename T> int getConnectedRegions(Graph<T> &g) {
   int count = 0;
   auto allNodes = g.getNodes();
   std::set<T> visited;
+  auto _head = g.getHead();
   for (auto &node : allNodes) {
     g.setHead(node);
     auto bfsResult = bfs(g);
@@ -218,5 +219,6 @@ template <typename T> int getConnectedRegions(Graph<T> &g) {
       count++;
     }
   }
+  g.setHead(_head);
   return count;
 }

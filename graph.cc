@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-  Graph<int> g{UNDIRECTED};
+  Graph<int> g{DIRECTED};
   g.insertNode(1);
   g.insertNode(2);
   g.insertNode(3);
@@ -15,10 +15,11 @@ int main() {
 
   g.insertEdge(1, 4);
   g.insertEdge(1, 2);
-  g.insertEdge(3, 4);
-  g.insertEdge(3, 2);
+  g.insertEdge(4, 3);
+  g.insertEdge(2, 3);
 
   g.insertEdge(5, 6);
+
   g.setHead(1);
   auto v = g.getNodes();
   for (auto &i : v) {
