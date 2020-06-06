@@ -118,16 +118,11 @@ public:
 };
 template <typename T, typename Container> std::vector<T> _fs(Graph<T> &g) {
   std::vector<T> v;
-  // auto nodes = g.getNodes();
   T head = g.getHead();
-  // v.reserve(nodes.size());
   std::set<T> visited;
-  // if (!nodes.size())
-  //  return v;
   if (!head)
     return v;
   Container q;
-  // q.push(*nodes.begin()); // set the first node as head
   q.push(head);
   while (!q.empty()) {
     v.push_back(q.front());
@@ -143,18 +138,6 @@ template <typename T, typename Container> std::vector<T> _fs(Graph<T> &g) {
   }
   return v;
 }
-
-// BFS
-template <typename T> std::vector<T> bfs(Graph<T> &g) {
-  return _fs<T, std::queue<T>>(g);
-}
-// DFS
-template <typename T> std::vector<T> dfs(Graph<T> &g) {
-  return _fs<T, stack<T>>(g);
-}
-
-// Has Cycle
-//
 template <typename Container, typename T>
 bool contains(const Container &c, T a) {
   const T *end = &c.top() + 1;
@@ -166,28 +149,61 @@ bool contains(const Container &c, T a) {
   }
   return false;
 }
-
-template <typename T, typename Container> bool _hasCycle(Graph<T> &g) {
-  auto nodes = g.getNodes();
+template <typename T, typename Container> bool _fsCycle(Graph<T> &g) {
+  std::vector<T> v;
+  T head = g.getHead();
   std::set<T> visited;
-  if (!nodes.size())
+  if (!head)
     return false;
   Container q;
-  q.push(*nodes.begin());
+  q.push(head);
   while (!q.empty()) {
+    v.push_back(q.top());
     auto c_ = g.getConnected(q.top());
     visited.insert(q.top());
     q.pop();
+    if (c_.size() == 0)
+      v.pop_back();
     for (auto &i : c_) {
-      q.push(i);
-      if (visited.find(i) != visited.end() && contains(q, i)) {
-        return true;
+      for (auto &j : v) {
+        if (j == i)
+          return true;
       }
+      q.push(i);
     }
   }
   return false;
 }
 
+// BFS
+template <typename T> std::vector<T> bfs(Graph<T> &g) {
+  return _fs<T, std::queue<T>>(g);
+}
+// DFS
+template <typename T> std::vector<T> dfs(Graph<T> &g) {
+  return _fs<T, stack<T>>(g);
+}
+// Has cycle
+template <typename T> bool _dfsCycle(Graph<T> &g) {
+  return _fsCycle<T, std::stack<T, std::vector<T>>>(g);
+}
+
+// Has Cycle
+template <typename T, typename Container> bool _hasCycle(Graph<T> &g) {
+  auto nodes = g.getNodes();
+  if (!nodes.size())
+    return false;
+  Container q;
+  std::set<T> done;
+  auto head = g.getHead();
+  for (auto &i : nodes) {
+    g.setHead(i);
+    if (_dfsCycle(g))
+      return true;
+  }
+  g.setHead(head);
+  return false;
+}
 
 template <typename T> bool hasCycle(Graph<T> &g) {
   return _hasCycle<T, std::stack<T, std::vector<T>>>(g);
