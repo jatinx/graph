@@ -10,13 +10,17 @@ int main() {
   g.insertNode(3);
   g.insertNode(4);
 
-  // g.insertNode(5);
-  // g.insertNode(6);
+  g.insertNode(5);
+  g.insertNode(6);
 
   g.insertEdge(1, 2);
-  g.insertEdge(2, 3);
-  //g.insertEdge(3, 1);
   g.insertEdge(1, 3);
+  g.insertEdge(2, 4);
+  g.insertEdge(3, 4);
+  g.insertEdge(4, 6);
+  g.insertEdge(1, 5);
+  g.insertEdge(4, 5);
+  g.insertEdge(5, 6);
 
   // g.insertEdge(5, 6);
 
@@ -60,4 +64,5 @@ int main() {
   cout << "Distance of 1 and 4 is:: " << dist << endl;
 
   cout << "Connnected Regions:: " << getConnectedRegions(g) << endl;
+  getTopologicalSort(g);
 }

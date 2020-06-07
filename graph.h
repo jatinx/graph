@@ -252,3 +252,57 @@ template <typename T> int getConnectedRegions(Graph<T> &g) {
   g.setHead(_head);
   return count;
 }
+
+int index = 1;
+
+template <typename T, typename S>
+bool hasNonVisitedChildren(const T &c_, const S &s) {
+  for (auto &i : c_) {
+    if (s.find(i) == s.end())
+      return true;
+  }
+  return false;
+}
+
+template <typename T> std::vector<std::pair<T, int>> _fsDAG(Graph<T> &g) {
+  std::vector<std::pair<T, int>> v;
+  T head = g.getHead();
+  std::set<T> visited;
+  if (!head)
+    return v;
+  int id = 0;
+  std::stack<std::pair<T, int>> q;
+  q.push(std::make_pair(head, id++));
+  while (!q.empty()) {
+    // v.push_back(q.top());
+    auto c_ = g.getConnected(q.top().first);
+    if (!hasNonVisitedChildren(c_, visited)) {
+      v.push_back(std::make_pair(q.top().first, index--));
+      q.pop();
+      continue;
+    }
+    visited.insert(q.top().first);
+    for (auto &i : c_) {
+      if (visited.find(i) == visited.end()) {
+        visited.insert(i);
+        q.push(std::make_pair(i, id++));
+      }
+    }
+  }
+  return v;
+}
+
+template <typename T> std::vector<T> getTopologicalSort(Graph<T> &g) {
+  std::vector<T> v;
+  // if(hasCycle(g) == true) { std::cout << "Cycle" << std::endl; return v; }
+  index = g.getNodes().size();
+  v.reserve(g.getNodes().size());
+  auto res = _fsDAG(g);
+  sort(res.begin(), res.end(),
+       [](auto &a, auto &b) { return a.second < b.second; });
+  for (auto &i : res) {
+    std::cout << i.first << " - " << i.second << std::endl;
+    v.push_back(i.first);
+  }
+  return v;
+}
